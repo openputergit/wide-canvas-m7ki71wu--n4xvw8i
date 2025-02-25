@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare AI - AI-Powered Medical Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1f2c 0%, #121318 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+        }
+
+        .glass-card {
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 10px;
+            display: none;
+            z-index: 100;
+        }
+
+        .chatbot.active {
+            display: block;
+        }
+
+        .service-modal {
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .service-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="glass fixed w-full z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <button onclick="toggleMenu()" class="md:hidden"><i class="bi bi-list text-2xl"></i></button>
+            <a href="#" class="text-xl font-bold ml-2">HealthcareAI</a>
+        </div>
+        <div class="hidden md:flex space-x-6" id="navLinks">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#about" class="nav-link">About Us</a>
+            <a href="#upload" class="nav-link">Upload Report</a>
+            <a href="#contact" class="nav-link">Contact</a>
+            <button class="glass px-4 py-2 rounded-full hover:bg-green-500 transition-all">Login</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen pt-24 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 space-y-6">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+                    AI-Powered Medical Analysis for a Healthier Future
+                </h1>
+                <p class="text-gray-300 text-lg">
+                    Revolutionizing healthcare with AI-driven diagnosis and predictive analysis
+                </p>
+                <button class="glass px-8 py-3 rounded-full text-lg hover:bg-green-500 transition-all" onclick="openServiceModal('upload')">
+                    Get Started
+                </button>
+            </div>
+            <div class="md:w-1/2 mt-12 md:mt-0">
+                <img src="https://source.unsplash.com/800x600/?medical,technology" alt="AI Healthcare" class="rounded-xl w-full">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass glass-card p-6 cursor-pointer" onclick="openServiceModal('disease')">
+                    <i class="bi bi-virus text-4xl text-green-500"></i>
+                    <h3 class="text-xl font-bold mt-4">AI Disease Detection</h3>
+                </div>
+                <div class="glass glass-card p-6 cursor-pointer" onclick="openServiceModal('scan')">
+                    <i class="bi bi-browser-chrome text-4xl text-blue-500"></i>
+                    <h3 class="text-xl font-bold mt-4">MRI & CT Scan Analysis</h3>
+                </div>
+                <div class="glass glass-card p-6 cursor-pointer" onclick="openServiceModal('cancer')">
+                    <i class="bi bi-syringe text-4xl text-green-500"></i>
+                    <h3 class="text-xl font-bold mt-4">Cancer & Thyroid Report Analysis</h3>
+                </div>
+                <div class="glass glass-card p-6 cursor-pointer" onclick="openServiceModal('emergency')">
+                    <i class="bi bi-heartbeat text-4xl text-blue-500"></i>
+                    <h3 class="text-xl font-bold mt-4">Emergency Medical Advice</h3>
+                </div>
+                <div class="glass glass-card p-6 cursor-pointer" onclick="openServiceModal('consultation')">
+                    <i class="bi bi-person-check text-4xl text-green-500"></i>
+                    <h3 class="text-xl font-bold mt-4">Upcoming Doctor Consultation</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6 bg-opacity-50 bg-black">
+        <div class="container mx-auto">
+            <div class="glass p-8">
+                <h2 class="text-3xl font-bold text-center mb-8">About Us</h2>
+                <p class="text-gray-300">
+                    We're dedicated to revolutionizing healthcare through AI-driven technology, making accurate medical analysis accessible to everyone.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass py-10 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-300">© 2025 Healthcare AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Service Modal -->
+    <div id="serviceModal" class="service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="glass m-4 max-w-2xl w-full p-8 rounded-xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" id="modalTitle">Upload Medical Report</h3>
+                <button onclick="closeServiceModal()" class="text-2xl">&times;</button>
+            </div>
+            <div class="upload-zone p-8 border-2 border-dashed border-gray-600 rounded-xl text-center cursor-pointer" id="dropZone">
+                <i class="bi bi-cloud-upload text-4xl text-green-500"></i>
+                <p class="mt-4">Drag and drop files here or click to upload</p>
+                <p class="text-sm text-gray-400 mt-2">Supported formats: PDF, JPG, PNG, DICOM</p>
+            </div>
+            <button class="w-full glass mt-6 py-3 rounded-xl hover:bg-green-500 transition-all">
+                Analyze Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot" id="chatbot">
+        <div class="glass p-4 rounded-xl">
+            <h4 class="font-bold">AI Chatbot</h4>
+            <div class="flex justify-end">
+                <button onclick="closeChatbot()" class="text-2xl">&times;</button>
+            </div>
+            <p>How can I assist you today?</p>
+            <!-- Additional chatbot functionality can be added here -->
+        </div>
+    </div>
+
+    <script>
+        function openServiceModal(type) {
+            const modal = document.getElementById('serviceModal');
+            const title = document.getElementById('modalTitle');
+            
+            switch(type) {
+                case 'disease':
+                    title.textContent = 'AI Disease Detection';
+                    break;
+                case 'scan':
+                    title.textContent = 'Upload Scan';
+                    break;
+                case 'cancer':
+                    title.textContent = 'Cancer & Thyroid Report Analysis';
+                    break;
+                case 'emergency':
+                    title.textContent = 'Emergency Medical Advice';
+                    break;
+                case 'consultation':
+                    title.textContent = 'Upcoming Doctor Consultation';
+                    break;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeServiceModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+        }
+
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.classList.toggle('active');
+        }
+
+        function closeChatbot() {
+            document.getElementById('chatbot').classList.remove('active');
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('hidden');
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
